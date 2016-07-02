@@ -106,24 +106,7 @@ Verify deployment by visiting the admin:
 $ heroku open /admin
 ```
 
-### Subsequent Deployments
-
-Subsequent deployments aren't as involved. Simply deploy a Heroku-compatible slug:
-
-```
-$ heroku container:release
-```
-
-Run migrations if necessary:
-
-```
-$ heroku run bash
-~ $ cd user/
-~/user $ python manage.py migrate
-~/user $ exit
-```
-
-## Heroku Add-ons
+#### Heroku Add-ons
 
 To allow the app to send email, provision Heroku's [SendGrid add-on](https://devcenter.heroku.com/articles/sendgrid>). This will export the `SENDGRID_USERNAME` and `SENDGRID_PASSWORD` environment variables expected by the app.
 
@@ -136,4 +119,22 @@ Use the Heroku [Scheduler add-on](https://devcenter.heroku.com/articles/schedule
 ```
 $ heroku addons:create scheduler:standard
 $ heroku addons:open scheduler
+```
+
+### Subsequent Deployments
+
+Subsequent deployments are simple. Just rebuild your containers and deploy a Heroku-compatible slug:
+
+```
+$ docker-compose build
+$ heroku container:release
+```
+
+Run migrations if necessary:
+
+```
+$ heroku run bash
+~ $ cd user/
+~/user $ python manage.py migrate
+~/user $ exit
 ```
