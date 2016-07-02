@@ -1,0 +1,8 @@
+{
+  "name": "rotations",
+  "description": "Django app for managing rotations.",
+  "image": "heroku/python:3",
+  "addons": [
+    "heroku-postgresql"
+  ]
+}
