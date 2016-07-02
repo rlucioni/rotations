@@ -1,4 +1,4 @@
-# rotations
+# rotations [![Build Status](https://img.shields.io/travis/rlucioni/rotations.svg?style=flat-square&maxAge=60)](https://travis-ci.org/rlucioni/rotations)
 
 Django app for managing rotations.
 
