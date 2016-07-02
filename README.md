@@ -138,3 +138,5 @@ $ heroku run bash
 ~/user $ python manage.py migrate
 ~/user $ exit
 ```
+
+Heroku's traditional Git-based deployment (e.g., to deploy when a commit is merged to master on GitHub) is also supported. Note that when the app is deployed this way, source code will be mounted under `/app` instead of under `/app/user`.
