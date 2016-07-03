@@ -143,3 +143,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
+
+# Day of the week on which to advance rotations (by default, Monday).
+# Allows Heroku's Scheduler to be used to run the `rotate` command weekly.
+ROTATION_DAY = 0
