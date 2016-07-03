@@ -1,5 +1,4 @@
 import calendar
-from concurrent.futures import ThreadPoolExecutor, as_completed
 import datetime
 import logging
 
@@ -102,19 +101,14 @@ class Command(BaseCommand):
             up_next=up_next.name,
         )
 
-        messages = [
-            sendgrid.Mail(
-                to=m.email,
-                from_email=settings.FROM_EMAIL,
-                subject=rotation.name,
-                text=text,
-            ) for m in rotation.members.all()
-        ]
+        message = sendgrid.Mail(
+            to=[m.email for m in rotation.members.all()],
+            # cc=[],
+            from_email=settings.FROM_EMAIL,
+            subject=rotation.name,
+            text=text,
+        )
 
-        with ThreadPoolExecutor() as executor:
-            futures = [executor.submit(self.sendgrid_client.send, m) for m in messages]
-
-        for future in as_completed(futures):
-            status, msg = future.result()
-            log_msg = 'SendGrid returned {status}: {msg}.'.format(status=status, msg=msg)
-            logger.info(log_msg) if status == 200 else logger.error(log_msg)
+        status, msg = self.sendgrid_client.send(message)
+        log_msg = 'SendGrid returned {status}: {msg}.'.format(status=status, msg=msg)
+        logger.info(log_msg) if status == 200 else logger.error(log_msg)
