@@ -39,7 +39,7 @@ $ cd rotations
 Start the app as follows:
 
 ```
-$ docker-compose up web
+$ make serve
 ```
 
 The app should now be running locally. Verify by visiting `http://192.168.99.100:8080/` in a browser. Django's `DEBUG` setting is disabled by default, so you should expect a 404.
@@ -47,8 +47,8 @@ The app should now be running locally. Verify by visiting `http://192.168.99.100
 Now run migrations, create a superuser, and collect static files in `STATIC_ROOT`.
 
 ```
-$ docker-compose run shell
-root@8ca7213f28c4:/app/user# python manage.py migrate
+$ make shell
+root@8ca7213f28c4:/app/user# make migrate
 root@8ca7213f28c4:/app/user# python manage.py createsuperuser
 root@8ca7213f28c4:/app/user# python manage.py collectstatic
 ```
@@ -56,10 +56,16 @@ root@8ca7213f28c4:/app/user# python manage.py collectstatic
 Since you've just made changes to the app (collecting static files), rebuild your containers:
 
 ```
-$ docker-compose build
+$ make build
 ```
 
 You should now be able to access the Django admin by starting the app again and visiting `http://192.168.99.100:8080/admin`.
+
+As you work, you'll leave a trail of exited containers and dangling images behind you. To clean these up, run
+
+```
+$ make clean
+```
 
 ## Deployment
 
@@ -74,7 +80,7 @@ $ heroku create
 Then deploy a Heroku-compatible slug:
 
 ```
-$ heroku container:release
+$ make deploy
 ```
 
 Run migrations using a one-off dyno. You'll also want to create a superuser.
@@ -82,7 +88,7 @@ Run migrations using a one-off dyno. You'll also want to create a superuser.
 ```
 $ heroku run bash
 ~ $ cd user/
-~/user $ python manage.py migrate
+~/user $ make migrate
 ~/user $ python manage.py createsuperuser
 ~/user $ exit
 ```
@@ -126,8 +132,7 @@ $ heroku addons:open scheduler
 Subsequent deployments are simple. Just rebuild your containers and deploy a Heroku-compatible slug:
 
 ```
-$ docker-compose build
-$ heroku container:release
+$ make deploy
 ```
 
 Run migrations if necessary:
@@ -135,7 +140,7 @@ Run migrations if necessary:
 ```
 $ heroku run bash
 ~ $ cd user/
-~/user $ python manage.py migrate
+~/user $ make migrate
 ~/user $ exit
 ```
 
