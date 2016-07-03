@@ -39,7 +39,10 @@ class Command(BaseCommand):
             settings.SENDGRID_PASSWORD,
         )
 
-        for rotation in Rotation.objects.all():
+        rotations = Rotation.objects.all()
+        logger.info('Attempting to advance %d rotations.', len(rotations))
+
+        for rotation in rotations:
             members = list(rotation.members.all())
             member_count = len(members)
 
@@ -48,7 +51,11 @@ class Command(BaseCommand):
             try:
                 current_index = members.index(rotation.on_call)
             except ValueError:
-                logger.warning('Failed to find %s in the members list.', rotation.on_call.name)
+                logger.warning(
+                    'Failed to find %s in the %s rotation\'s members list.',
+                    rotation.on_call.name,
+                    rotation.name,
+                )
                 current_index = 0
 
             next_index = (current_index + 1) % member_count
@@ -59,7 +66,7 @@ class Command(BaseCommand):
 
             # Advance the rotation.
             logger.info(
-                'Advancing the %s. %s was on call. %s is now on call.',
+                'Advancing the %s rotation. %s was on call. %s is now on call.',
                 rotation.name,
                 next_member.name,
                 future_member.name,
@@ -87,6 +94,8 @@ class Command(BaseCommand):
                 return False
 
     def notify(self, rotation, up_next):
+        logger.info('Notifying members of changes to the %s rotation.', rotation.name)
+
         text = rotation.message.format(
             rotation_name=rotation.name,
             on_call=rotation.on_call.name,
