@@ -24,3 +24,12 @@ deploy: build
 
 migrate:
 	python manage.py migrate
+
+start:
+	docker-machine start default
+
+connect: start
+	eval $(shell docker-machine env)
+
+stop:
+	docker-machine stop default
