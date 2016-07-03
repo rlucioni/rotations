@@ -10,7 +10,7 @@ SECRET_KEY = os.environ.get('ROTATIONS_SECRET_KEY', 'insecure-secret-key')
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Application definition
-INSTALLED_APPS = [
+DJANGO_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -18,7 +18,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.staticfiles',
-]
+)
+
+THIRD_PARTY_APPS = (
+    'sortedm2m',
+)
+
+LOCAL_APPS = (
+    'rotations.apps.RotationsConfig',
+)
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -97,7 +107,7 @@ SENDGRID_USERNAME = os.environ.get('SENDGRID_USERNAME', 'set-me-please')
 SENDGRID_PASSWORD = os.environ.get('SENDGRID_PASSWORD', 'set-me-please')
 
 # Address to send emails from
-FROM_EMAIL = 'Custodian <custodian@example.com>'
+FROM_EMAIL = os.environ.get('FROM_EMAIL', 'Some Name <name@example.com>')
 
 # Logging
 LOGGING = {
