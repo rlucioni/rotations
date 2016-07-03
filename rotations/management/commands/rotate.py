@@ -59,7 +59,8 @@ class Command(BaseCommand):
 
             # Advance the rotation.
             logger.info(
-                'Advancing the rotation. %s was on call. %s is now on call.',
+                'Advancing the %s. %s was on call. %s is now on call.',
+                rotation.name,
                 next_member.name,
                 future_member.name,
             )
