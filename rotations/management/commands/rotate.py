@@ -103,7 +103,7 @@ class Command(BaseCommand):
 
         message = sendgrid.Mail(
             to=[m.email for m in rotation.members.all()],
-            # cc=[],
+            cc=[w.email for w in rotation.watchers.all()],
             from_email=settings.FROM_EMAIL,
             subject=rotation.name,
             text=text,

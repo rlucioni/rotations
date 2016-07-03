@@ -42,6 +42,8 @@ class Rotation(models.Model):
     )
 
     members = SortedManyToManyField(Member, related_name='rotations')
+    watchers = SortedManyToManyField(Member, related_name='watching')
+
     on_call = models.ForeignKey(
         Member,
         on_delete=models.CASCADE,

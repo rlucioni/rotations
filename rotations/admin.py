@@ -19,5 +19,5 @@ class RotationAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     list_display = ('name', 'description', 'on_call')
 
-    fields = ('name', 'description', 'message', 'members', 'on_call', 'created', 'modified')
+    fields = ('name', 'description', 'message', 'members', 'watchers', 'on_call', 'created', 'modified')
     readonly_fields = ('created', 'modified')
