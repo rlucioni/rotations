@@ -1,12 +1,6 @@
-language: python
-python:
-  - '3.5'
+services:
+  - docker
 
-# Route builds to Travis CI's container-based infrastructure.
-sudo: false
-
-cache: pip
-install:
-  - pip install -U pip
-  - make requirements
-script: make quality
+script:
+  - make test
+  - make quality

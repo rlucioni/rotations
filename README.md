@@ -8,26 +8,35 @@ This app uses Docker and Heroku's [container tools plugin](https://github.com/he
 
 Complete instructions for development and deployment are below, adapted from Heroku's docs on [local development with Docker](https://devcenter.heroku.com/articles/local-development-with-docker).
 
-## Development
+## Getting Started
 
-Set up Docker locally by installing the [Docker Toolbox](https://www.docker.com/products/docker-toolbox). Once installed and if you're running OS X locally, open a shell using the Docker Quickstart Terminal app. This will create a `default` [Docker Machine](https://docs.docker.com/machine/overview/) instance. Verify that you have a working Docker installation by running:
+### Docker
+
+Set up Docker locally by installing the [Docker Toolbox](https://www.docker.com/products/docker-toolbox). If you require a Docker Machine VM (e.g., you're on OS X), start and connect your shell to the VM using:
+
+```
+$ make connect
+```
+
+This will create a `default` [Docker Machine](https://docs.docker.com/machine/overview/) instance. Make a note of the active machine's IP address. You'll need it to access the app in a browser.
+
+Verify that you have a working Docker installation by running:
 
 ```
 $ docker run hello-world
 ```
 
-You should see output confirming a working installation. If you don't, refer to Docker's [Troubleshooting](https://docs.docker.com/v1.10/faqs/troubleshoot/) docs for help. If you're using Docker Machine, make a note of the active machine's IP address. You'll need it to access the app in a browser.
+You should see output confirming a working installation. If you don't, refer to Docker's [Troubleshooting](https://docs.docker.com/v1.10/faqs/troubleshoot/) docs for help.
 
-```
-$ docker-machine ip
-192.168.99.100
-```
+### Heroku Toolbelt
 
 Install the [Heroku Toolbelt](https://toolbelt.heroku.com/) if you haven't already, then install the container tools plugin:
 
 ```
 $ heroku plugins:install heroku-container-tools
 ```
+
+### Development
 
 Now you're ready to clone the code:
 
@@ -39,29 +48,36 @@ $ cd rotations
 Start the app as follows:
 
 ```
-$ make serve
+$ make up
 ```
 
-The app should now be running locally. Verify by visiting `http://192.168.99.100:8080/` in a browser. Django's `DEBUG` setting is disabled by default, so you should expect a 404.
+The app should now be running locally. Verify by visiting `http://<Docker Machine IP>:8080/` in a browser. Django's `DEBUG` setting is disabled by default, so you should expect a 404.
 
 Now run migrations, create a superuser, and collect static files in `STATIC_ROOT`.
 
 ```
 $ make shell
-root@8ca7213f28c4:/app/user# make migrate
+root@8ca7213f28c4:/app/user# python manage.py migrate
 root@8ca7213f28c4:/app/user# python manage.py createsuperuser
 root@8ca7213f28c4:/app/user# python manage.py collectstatic
+root@8ca7213f28c4:/app/user# exit
 ```
 
-Since you've just made changes to the app (collecting static files), rebuild your containers:
+You should now be able to access the Django admin by starting the app again and visiting `http://<Docker Machine IP>:8080/admin`.
+
+Run the tests with:
 
 ```
-$ make build
+$ make test
 ```
 
-You should now be able to access the Django admin by starting the app again and visiting `http://192.168.99.100:8080/admin`.
+Run code style checks with:
 
-As you work, you'll leave a trail of exited containers and dangling images behind you. To clean these up, run
+```
+$ make quality
+```
+
+As you work, you'll leave a trail of exited containers and dangling images behind you. To clean these up, run:
 
 ```
 $ make clean
@@ -88,7 +104,7 @@ Run migrations using a one-off dyno. You'll also want to create a superuser.
 ```
 $ heroku run bash
 ~ $ cd user/
-~/user $ make migrate
+~/user $ python manage.py migrate
 ~/user $ python manage.py createsuperuser
 ~/user $ exit
 ```
@@ -140,7 +156,7 @@ Run migrations if necessary:
 ```
 $ heroku run bash
 ~ $ cd user/
-~/user $ make migrate
+~/user $ python manage.py migrate
 ~/user $ exit
 ```
 

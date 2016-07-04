@@ -7,7 +7,7 @@ DEBUG = False
 
 SECRET_KEY = os.environ.get('ROTATIONS_SECRET_KEY', 'insecure-secret-key')
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Application definition
 DJANGO_APPS = (

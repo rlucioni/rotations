@@ -42,39 +42,10 @@ class Command(BaseCommand):
         logger.info('Attempting to advance %d rotations.', len(rotations))
 
         for rotation in rotations:
-            members = list(rotation.members.all())
-            member_count = len(members)
-
-            # Figure out where we are in the rotation, where to look for who's up next,
-            # and where to look for who's after that. Remember that members are ordered!
-            try:
-                current_index = members.index(rotation.on_call)
-            except ValueError:
-                logger.warning(
-                    'Failed to find %s in the %s rotation\'s members list.',
-                    rotation.on_call.name,
-                    rotation.name,
-                )
-                current_index = 0
-
-            next_index = (current_index + 1) % member_count
-            next_member = members[next_index]
-
-            future_index = (current_index + 2) % member_count
-            future_member = members[future_index]
-
-            # Advance the rotation.
-            logger.info(
-                'Advancing the %s rotation. %s was on call. %s is now on call.',
-                rotation.name,
-                next_member.name,
-                future_member.name,
-            )
-            rotation.on_call = next_member
-            rotation.save()
+            next_member = rotation.advance()
 
             # Notify all members of the change.
-            self.notify(rotation, future_member)
+            self.notify(rotation, next_member)
 
     def is_runnable(self, force):
         """Determine if the command should be run."""

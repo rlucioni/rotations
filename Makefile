@@ -1,29 +1,17 @@
-build:
-	docker-compose build
-
-serve:
+up:
 	docker-compose up web
 
 shell:
-	docker-compose run shell
+	docker-compose run web bash
 
-requirements:
-	pip install -r requirements.txt
+test:
+	docker-compose run web py.test -q
 
 quality:
-	flake8 .
-
-clean:
-	# Delete exited containers.
-	docker rm -v $(shell docker ps -a -q -f status=exited)
-	# Delete dangling images.
-	docker rmi $(shell docker images -f "dangling=true" -q)
+	docker-compose run web flake8 .
 
 deploy: build
 	heroku container:release
-
-migrate:
-	python manage.py migrate
 
 start:
 	docker-machine start default
@@ -33,3 +21,9 @@ connect: start
 
 stop:
 	docker-machine stop default
+
+clean:
+	# Delete exited containers.
+	docker rm -v $(shell docker ps -a -q -f status=exited)
+	# Delete dangling images.
+	docker rmi $(shell docker images -f "dangling=true" -q)

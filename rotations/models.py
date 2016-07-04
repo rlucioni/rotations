@@ -1,5 +1,10 @@
+import logging
+
 from django.db import models
 from sortedm2m.fields import SortedManyToManyField
+
+
+logger = logging.getLogger(__name__)
 
 
 class Member(models.Model):
@@ -58,3 +63,40 @@ class Rotation(models.Model):
 
     def __str__(self):
         return self.name
+
+    def advance(self):
+        """Advance the rotation to the next member in line."""
+        members = list(self.members.all())
+        member_count = len(members)
+
+        # Figure out where we are in the rotation, where to look for who's up next,
+        # and where to look for who's after that. Remember that members are ordered!
+        try:
+            current_index = members.index(self.on_call)
+        except ValueError:
+            logger.warning(
+                'Failed to find %s in the %s rotation\'s members list.',
+                self.on_call.name,
+                self.name,
+            )
+            current_index = 0
+
+        on_call_index = (current_index + 1) % member_count
+        on_call_member = members[on_call_index]
+
+        next_index = (current_index + 2) % member_count
+        next_member = members[next_index]
+
+        # Advance the rotation.
+        logger.info(
+            'Advancing the %s rotation. %s was on call. %s is now on call. %s is up next.',
+            self.name,
+            self.on_call.name,
+            on_call_member.name,
+            next_member.name,
+        )
+
+        self.on_call = on_call_member
+        self.save()
+
+        return next_member

@@ -4,5 +4,6 @@ Django==1.9.7
 flake8==2.6.2
 gunicorn==19.6.0
 psycopg2==2.6.1
+pytest==2.9.2
 sendgrid==2.2.1
 whitenoise==3.2
