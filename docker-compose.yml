@@ -5,6 +5,7 @@ web:
   environment:
     PORT: 8080
     DATABASE_URL: 'postgres://postgres:@herokuPostgresql:5432/postgres'
+    DJANGO_SETTINGS_MODULE: 'rotations.settings'
   ports:
     - '8080:8080'
   links:

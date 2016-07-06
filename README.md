@@ -77,6 +77,12 @@ Run code style checks with:
 $ make quality
 ```
 
+If you introduce new dependencies (i.e., by adding to `requirements.py`), install them by rebuilding the service:
+
+```
+$ make build
+```
+
 As you work, you'll leave a trail of exited containers and dangling images behind you. To clean these up, run:
 
 ```

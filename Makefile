@@ -1,3 +1,6 @@
+build:
+	docker-compose build
+
 up:
 	docker-compose up web
 
@@ -5,7 +8,7 @@ shell:
 	docker-compose run web bash
 
 test:
-	docker-compose run web py.test -q
+	docker-compose run web python -m pytest
 
 quality:
 	docker-compose run web flake8 .
